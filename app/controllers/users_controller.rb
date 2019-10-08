@@ -1,12 +1,12 @@
 class UsersController < ApplicationController
-  allowed
+	before_action :authenticate_user!
 	def index
 		user = User.all
 		render json: users, status: :ok
 	end
 
 	def show
-		user = User.find(params[:id])
+		user = current_user
 		if user.valid?
 			render json: user, status: :ok
 		else
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
 	end
 
 	def update
-		user = User.find(params[:id])
+		user = current_user
 		if user.update(user_params)
 			render json: user, status: :ok
 		else
@@ -45,5 +45,8 @@ class UsersController < ApplicationController
 	private
     def user_params
 			params.require(:user).permit(:name, :email, :handle, :password)
+		end
+		def edit_params
+			params.require(:user).permit(:name, :email, :handle)
     end
 end

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
                 registration: 'signup'
               }
   
-  resources :user
-  
+  resource :user, only:[:show, :update]
+
+
 end

@@ -22,3 +22,5 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+https://rubyplus.com/articles/5341-Sending-Password-Reset-Email-using-Sendgrid-and-Devise-in-Rails-5-1-API-only-App
