@@ -1,0 +1,146 @@
+#Test with: http://editor.swagger.io/
+
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Microservice for Authentication
+  description: Ruby + Postgresql
+  license:
+    name: Software Architecture, 2019-II
+host: localhost:3000
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /signup:
+    post:
+      summary: Creates a new user
+      operationId: signup
+      parameters:
+        - name: user
+          in: body
+          required: true
+          description: Creates user on db, but it will require a later confirmation
+          schema:
+            $ref: '#/definitions/UserCreate'
+      responses:
+        '201':
+          description: Created
+        '422':
+          description: Error Already Taken, Too short password, etc.
+  /login:
+    post:
+      summary: Log in and returns bearer token(JWT)
+      operationId: login
+      parameters:
+        - name: user
+          in: body
+          required: true
+          description: Returns user object
+          schema:
+            $ref: '#/definitions/UserLogin'
+      responses:
+        '201':
+          description: User Session Created
+        '401':
+          description: Unauthorized, Invalid email or password
+  /logout:
+    delete:
+      summary: Blacklists user token - Requires JWT
+      operationId: logout
+      responses:
+        '201':
+          description: Ok
+        '401':
+          description: Not Found
+  /user:
+    get:
+      summary: Get current user with token
+      operationId: getUser
+      responses:
+        '201':
+          description: Ok
+        '401':
+          description: Not Found
+    put:
+      summary: Updates current user with token
+      operationId: putUser
+      parameters:
+      - name: user
+        in: body
+        required: true
+        description: Returns user object
+        schema:
+          $ref: '#/definitions/UserUpdate'
+      responses:
+        '201':
+          description: Ok
+        '401':
+          description: Not Found
+      
+  
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      
+  
+definitions:
+
+  UserUpdate:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/UserUpdateParams"
+
+  UserLogin:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/UserLoginParams"
+  
+  
+  UserCreate:
+    type: "object"
+    properties:
+      user:
+        $ref: "#/definitions/UserInput"
+  
+  UserInput:
+    type: object
+    properties:
+      name:
+        type: string
+      handle:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+  
+  UserUpdateParams:
+    type: object
+    properties:
+      name:
+        type: string
+      handle:
+        type: string
+      email:
+        type: string
+        
+  UserLoginParams:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  
+      
+      
+      
