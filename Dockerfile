@@ -11,4 +11,4 @@ COPY . /myapp
 
 # RUN rake db:create db:migrate
 
-EXPOSE 3000
+ENTRYPOINT ['./entrypoint.sh']
