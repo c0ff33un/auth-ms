@@ -25,28 +25,18 @@ class UsersController < ApplicationController
 
 	def update
 		user = current_user
-		if user.update(user_params)
+		if user.update(edit_params) && user.guest == false
 			render json: user, status: :ok
 		else
 			render json: user.errors, status: :unprocessable_entity
 		end
 	end
-
-	def destroy
-		user = User.find(params[:id])
-		user.destroy
-		if user.destroyed?
-			render json: {}, status: :ok
-		else
-			render json: user.errors, status: :unprocessable_entity
-		end
-	end
-    
+  
 	private
     def user_params
-			params.require(:user).permit(:name, :email, :handle, :password)
+			params.require(:user).permit(:email, :handle, :password)
 		end
 		def edit_params
-			params.require(:user).permit(:name, :email, :handle)
+			params.require(:user).permit(:email, :handle)
     end
 end

@@ -10,5 +10,7 @@ Rails.application.routes.draw do
   
   resource :user, only:[:show, :update]
 
+  post '/guests', to: 'guests#create'
+  delete '/guests', to: 'guests#destroy'
 
 end
