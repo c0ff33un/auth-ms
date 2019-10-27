@@ -56,3 +56,5 @@ gem 'dotenv-rails', groups: [:development, :test]
 gem 'devise', '~> 4.7', '>= 4.7.1'
 gem 'devise-jwt', '~> 0.6.0'
 gem "argon2", "~> 2.0"
+
+# gem "devise-guests", "~> 0.7.0"
