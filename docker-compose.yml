@@ -12,6 +12,7 @@ services:
     environment:
       DEVISE_JWT_SECRET_KEY: df20b9f114c31d3cff8dc50ddd633590a1ca63d15d8a9d1937a8265f889841d4919757e9bf7d38e22bed4dc15469b49e3016940a9a3bbc98a135e21d65e5f72a
       DB_URL: db
+      URL_API: taurus-api
     networks:
       - taurus-network
   db:
