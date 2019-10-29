@@ -11,16 +11,27 @@ services:
       - db
     environment:
       DEVISE_JWT_SECRET_KEY: df20b9f114c31d3cff8dc50ddd633590a1ca63d15d8a9d1937a8265f889841d4919757e9bf7d38e22bed4dc15469b49e3016940a9a3bbc98a135e21d65e5f72a
-      DB_URL: db
-      URL_API: taurus-api
+      API_URL: taurus-api
+      POSTGRES_URL: db
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
     networks:
       - taurus-network
   db:
     image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
+    
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     networks:
       - taurus-network
+    ports:
+      - "5432:5432"
 
 networks:
   taurus-network:
