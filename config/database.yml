@@ -10,8 +10,13 @@ default: &default
   timeout: 5000
 
 development:
-  <<: *default
-  database: db/development.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch('URL_DB') %>
+  username: postgres
+  password: postgres
+  pool: 5
+  database: myapp_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -23,8 +28,8 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  host: <%= ENV.fetch('POSTGRES_URL') %>
-  username: <%= ENV.fetch('POSTGRES_USER') %>
-  password: <%= ENV.fetch('POSTGRES_PASSWORD') %>
-  database: <%= ENV.fetch('POSTGRES_DB') %>
+  host: <%= ENV.fetch('URL_DB') %>
+  username: postgres
+  password: postgres
   pool: 5
+  database: myapp_development

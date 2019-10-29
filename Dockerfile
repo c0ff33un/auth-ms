@@ -1,13 +1,14 @@
- 
 FROM ruby:2.6.5
 RUN apt-get update -qq && apt-get install -y build-essential
+# libpq-dev nodejs
 
-COPY . /application
+RUN mkdir /myapp
+WORKDIR /myapp
+COPY Gemfile /myapp/Gemfile
+COPY Gemfile.lock /myapp/Gemfile.lock
+RUN bundle install
+COPY . /myapp
 
-WORKDIR /application
+# RUN rake db:create db:migrate
 
-RUN bundle install --deployment --without development test
-
-ENV RAILS_ENV production
-
-ENTRYPOINT ./entrypoint.sh
+EXPOSE 3000
