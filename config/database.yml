@@ -10,26 +10,22 @@ default: &default
   timeout: 5000
 
 development:
+ <<: *default
+ database: db/development.sqlite3
+
+production:
   adapter: postgresql
-  encoding: unicode
   host: <%= ENV.fetch('URL_DB') %>
-  username: postgres
-  password: postgres
-  pool: 5
-  database: myapp_development
+  timeout: 5000
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  password: <%= ENV.fetch('PASSWORD_DB') %>
+  user: <%= ENV.fetch('USER_DB') %>
+  database: taurus
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: db/test.sqlite3
-
-production:
   adapter: postgresql
-  encoding: unicode
-  host: <%= ENV.fetch('URL_DB') %>
-  username: postgres
-  password: postgres
-  pool: 5
-  database: myapp_development
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000

@@ -1,8 +1,8 @@
-# Compile the assets
-#bundle exec rails assets:precompile
+#!/bin/bash
+set -e
 
-# Migrate
-#bundle exec rails db:create db:migrate
+# Remove a potentially pre-existing server.pid for Rails.
+rm -f /myapp/tmp/pids/server.pid
 
-# Start the server
-bundle exec rails server
+# Then exec the container's main process (what's set as CMD in the Dockerfile).
+exec "$@"
