@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable, :confirmable,
+  devise :ldap_authenticatable, :database_authenticatable, :registerable, :confirmable,
 	       :recoverable, :rememberable, :validatable,
 	       :jwt_authenticatable, jwt_revocation_strategy: JwtBlacklist
   
@@ -14,5 +14,10 @@ class User < ApplicationRecord
       save(validate: false)
     end
     valid
+  end
+
+  def ldap_before_save
+    self.handle = Devise::LDAP::Adapter.get_ldap_param(self.email,"uid").first
+    self.confirm
   end
 end

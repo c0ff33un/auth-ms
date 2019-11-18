@@ -58,3 +58,6 @@ gem 'devise-jwt', '~> 0.6.0'
 gem "argon2", "~> 2.0"
 
 # gem "devise-guests", "~> 0.7.0"
+
+# seems easier to user ldap gem
+gem "devise_ldap_authenticatable"
