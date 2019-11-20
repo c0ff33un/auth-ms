@@ -60,3 +60,4 @@ gem "argon2", "~> 2.0"
 # gem "devise-guests", "~> 0.7.0"
 
 # seems easier to user ldap gem
+gem 'net-ldap'

@@ -10,21 +10,41 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    super
-    # begin
-    #   user = warden.authenticate!(:database_authenticatable)
-    # rescue Exception => e
-    #   user = warden.authenticate!(:ldap_authenticatable)
-    # end
-    # sign_in(resource_name, user)
-    # yield user if block_given?
-    # respond_with user, location: after_sign_in_path_for(user)
+    if params[:user]
+      email = params[:user][:email]
+      password = params[:user][:password]
+      
+      base = 'ou=taurus, dc=taurus, dc=io'
+      ldap = Net::LDAP.new
+      ldap.host = 'localhost'
+      ldap.port = 389
+      ldap.auth "cn=#{email}, #{base}", "#{password}"
+      
+      bound = ldap.bind
+      if bound
+        ldap.search(base: base, filter: Net::LDAP::Filter.eq('cn', email)) do |entry|
+          puts entry.dn
+          entry.each do |attribute, values|
+            puts "   #{attribute}"
+            values.each do |value|
+              puts"   ---->#{value}"
+            end
+          end
+        end
+        puts('TESTING 01')
+        User.find_or_create_by(email: email) do |user|
+          user.password = password
+          user.confirm #this is hardcoded, just a test
+        end
+      else
+        super
+      end
+    end
   end
 
   # DELETE /resource/sign_out
   def destroy
-    
-    user.destroy() 
+    super
   end
 
   # protected
