@@ -63,4 +63,4 @@ gem "argon2", "~> 2.0"
 gem 'net-ldap'
 
 # AWS
-gem 'aws-sdk-rails'
+#gem 'aws-sdk-rails'

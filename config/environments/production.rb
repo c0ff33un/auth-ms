@@ -120,6 +120,16 @@ Rails.application.configure do
   # Rails.application.routes.default_url_options[:host] = 'meemperrapi.herokuapp.com'
 
   
-  # AWS ses mailer
-  config.action_mailer.delivery_method = :ses
+  # AWS MAILER, setup as smtp server
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { host: 'http://ec2-3-231-146-168.compute-1.amazonaws.com' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address              => ENV["SES_SERVER"],
+    :domain               => "http://ec2-3-231-146-168.compute-1.amazonaws.com",
+    :port                 => 587,
+    :user_name            => ENV["SES_USERNAME"],
+    :password             => ENV["SES_PASSWORD"],
+    :authentication       => :login
+  }
 end
