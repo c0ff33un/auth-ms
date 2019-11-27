@@ -61,3 +61,6 @@ gem "argon2", "~> 2.0"
 
 # seems easier to user ldap gem
 gem 'net-ldap'
+
+# AWS
+gem 'aws-sdk-rails'

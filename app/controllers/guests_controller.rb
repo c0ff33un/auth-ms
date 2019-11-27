@@ -2,13 +2,13 @@ class GuestsController < ApplicationController
 
   def create
     handle = "guest_#{Time.now.to_i}#{rand(100)}"
-    user = User.create(
-      handle: handle,
-      email: "#{handle}@example.com",
-      password: handle,
-      guest: true
-    )
+    user = User.new
+    user.handle = handle
+    user.email = "#{handle}@example.com"
+    user.password = handle
+    user.guest = true
     user.confirm
+    user.save!
     if user.valid?
       sign_in(user)
 			render json: user, status: :ok

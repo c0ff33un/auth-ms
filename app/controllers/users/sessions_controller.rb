@@ -13,33 +13,30 @@ class Users::SessionsController < Devise::SessionsController
     if params[:user]
       email = params[:user][:email]
       password = params[:user][:password]
-      
       base = 'ou=taurus, dc=taurus, dc=io'
-      ldap = Net::LDAP.new
-      ldap.host = 'localhost'
-      ldap.port = 389
-      ldap.auth "cn=#{email}, #{base}", "#{password}"
+
+      ldap = adminLdap()
       
-      bound = ldap.bind
-      if bound
-        ldap.search(base: base, filter: Net::LDAP::Filter.eq('cn', email)) do |entry|
-          puts entry.dn
-          entry.each do |attribute, values|
-            puts "   #{attribute}"
-            values.each do |value|
-              puts"   ---->#{value}"
-            end
+      if ldap.bind
+        print("USING LDAP")
+        uid = nil
+        ldap.search(base: base, filter: Net::LDAP::Filter.eq("cn", email),
+          attributes: ['uid', 'objectclass']){ |ldap|
+            uid = ldap.uid.first   
+        }
+        auth = ldap.authenticate "cn=#{email}, #{base}", password
+        if uid && auth
+          User.find_or_create_by(email: email) do |user|
+            user.handle = uid
+            user.password = password
+            user.confirm
           end
         end
-        puts('TESTING 01')
-        User.find_or_create_by(email: email) do |user|
-          user.password = password
-          user.confirm #this is hardcoded, just a test
-        end
       else
-        super
+        print("USING DATABASE DIRECTLY")
       end
     end
+    super
   end
 
   # DELETE /resource/sign_out
@@ -47,8 +44,15 @@ class Users::SessionsController < Devise::SessionsController
     super
   end
 
-  # protected
-
+  protected
+    def adminLdap
+      ldap = Net::LDAP.new
+      ldap.host = ENV['LDAP_HOST']
+      ldap.port = ENV['LDAP_PORT']
+      ldap.auth "cn=#{ENV['LDAP_ADMIN']}, dc=taurus, dc=io", ENV['LDAP_ADMIN_PASSWORD']
+      
+      return ldap
+    end
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_in_params
   #   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])

@@ -39,8 +39,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
   #   super
   # end
 
-  # protected
-
+  protected
+    def adminLdap
+      ldap = Net::LDAP.new
+      ldap.host = 'localhost'
+      ldap.port = 389
+      ldap.auth "cn=admin, dc=taurus, dc=io", "admin"
+      return ldap
+    end
+    def get_ldap_response(ldap)
+      msg = "Response Code: #{ ldap.get_operation_result.code }, Message: #{ ldap.get_operation_result.message }"
+    
+      raise msg unless ldap.get_operation_result.code == 0
+    end
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_up_params
   #   devise_parameter_sanitizer.permit(:sign_up, keys: [:attribute])
