@@ -14,7 +14,7 @@ services:
       URL_DB: db
       PASSWORD_DB: postgres
       USER_DB: postgres
-      URL_API: taurus-api
+      URL_WEB: taurus-web
     networks:
       - taurus-network
   db:
