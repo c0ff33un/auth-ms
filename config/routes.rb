@@ -15,5 +15,5 @@ Rails.application.routes.draw do
 
   post '/guests', to: 'guests#create'
   delete '/guests', to: 'guests#destroy'
-
+  post '/resend_confirmation', to: 'users#resend_confirmation'
 end

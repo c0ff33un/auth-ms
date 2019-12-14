@@ -31,7 +31,20 @@ class UsersController < ApplicationController
 			render json: user.errors, status: :unprocessable_entity
 		end
 	end
-  
+	
+	def resend_confirmation
+		user = User.find_by(:email => user_params[:email])
+		if user
+			if user.confirmed?
+				render json: {errors:{email:["User already confirmed"]}}, status: :unprocessable_entity
+			else
+				user.send_confirmation_instructions
+				render json: user, status: :ok
+			end
+		else
+			render json: {errors:{email:["User not found"]}}, status: :not_found
+		end
+	end
 	private
     def user_params
 			params.require(:user).permit(:email, :handle, :password)
